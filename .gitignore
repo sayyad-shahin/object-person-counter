@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+*.log
+# model weights are downloaded automatically
+*.pt
+# user uploads and outputs
+uploads/
+runs/
+*.mp4
+*.avi
+screenshot_*.jpg
+counts.csv

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Object &amp; Person Counter</title>
+  <meta name="description" content="Real-time object and person counting with YOLOv8.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <h1>👁️ Object &amp; Person Counter <small>YOLOv8</small></h1>
+    <span id="status" class="pill">idle</span>
+  </header>
+
+  <main class="grid">
+    <section class="left">
+      <div class="video"><img id="feed" src="/video_feed" alt="Live video with detections"></div>
+      <div class="btns">
+        <button id="startBtn" class="primary" type="button">▶ Start</button>
+        <button id="stopBtn" class="ghost" type="button">■ Stop</button>
+        <button id="resetBtn" class="ghost" type="button">↺ Reset counts</button>
+        <span id="fps" class="muted"></span>
+      </div>
+      <p id="error" class="error hidden" role="alert"></p>
+
+      <div class="card controls">
+        <h2>Settings</h2>
+        <div class="field"><label>Video source</label>
+          <div class="inline">
+            <label><input type="radio" name="src" value="webcam" checked> Webcam</label>
+            <select id="cam" aria-label="Webcam number"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select>
+            <label><input type="radio" name="src" value="file"> Video file</label>
+            <input id="file" type="file" accept="video/*">
+          </div>
+        </div>
+        <div class="field"><label>What to count</label>
+          <div id="classes" class="checks">
+            <label><input type="checkbox" value="all" checked> Everything</label>
+            <label><input type="checkbox" value="person"> person</label><label><input type="checkbox" value="car"> car</label>
+            <label><input type="checkbox" value="truck"> truck</label><label><input type="checkbox" value="bus"> bus</label>
+            <label><input type="checkbox" value="motorcycle"> motorcycle</label><label><input type="checkbox" value="bicycle"> bicycle</label>
+            <label><input type="checkbox" value="dog"> dog</label><label><input type="checkbox" value="cat"> cat</label>
+          </div>
+        </div>
+        <div class="field"><label for="conf">Confidence: <b id="confVal">0.35</b></label>
+          <input id="conf" type="range" min="0.1" max="0.9" step="0.05" value="0.35"></div>
+        <div class="field"><label for="line">Counting line</label>
+          <div class="inline"><select id="line"><option value="h">Horizontal (middle)</option><option value="v">Vertical (middle)</option><option value="none">None</option></select>
+          <label><input type="checkbox" id="flip"> Swap IN / OUT</label></div></div>
+      </div>
+    </section>
+
+    <aside class="right">
+      <div class="tiles">
+        <div class="tile"><span>In view now</span><b id="tNow">0</b></div>
+        <div class="tile"><span>Total seen</span><b id="tSeen">0</b></div>
+        <div class="tile in"><span>Line IN</span><b id="tIn">0</b></div>
+        <div class="tile out"><span>Line OUT</span><b id="tOut">0</b></div>
+      </div>
+      <div class="card"><h2>In view over time</h2><canvas id="spark" width="360" height="70" aria-label="Objects in view over time"></canvas></div>
+      <div class="card"><h2>By class</h2>
+        <table><thead><tr><th>Class</th><th>Now</th><th>Total seen</th><th>Peak</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="card"><h2>Line crossings</h2><ul id="events" class="events"></ul></div>
+    </aside>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
